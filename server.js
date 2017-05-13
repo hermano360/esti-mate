@@ -1,4 +1,5 @@
 var express = require('express');
+var products = require('./app/api/products.js');
 
 //Create out app
 
@@ -15,6 +16,13 @@ app.use(function(req,res,next){
   }
 })
 app.use(express.static('public'));
+
+app.get('/modelNo/:modelNo', function(req,res,next){
+  console.log(req.params.modelNo,"node");
+  products.connectDB(req.params.modelNo,function(docs){
+    res.json(docs)
+  });
+});
 
 app.listen(PORT,function(){
   console.log('Express server is up on port ' + PORT);
