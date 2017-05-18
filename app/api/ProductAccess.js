@@ -14,7 +14,7 @@ module.exports = {
         return res.data;
       }
     }, function(err){
-      throw new Error('City weather information not available');
+      throw new Error('Product Data not Available');
     });
   }
 }

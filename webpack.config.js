@@ -29,7 +29,10 @@ module.exports = {
       Nav: 'app/components/Nav.jsx',
       NewEstimate:'app/components/NewEstimate.jsx',
       applicationStyles:'app/styles/app.scss',
-      ProductAccess: 'app/api/ProductAccess.js'
+      ProductAccess: 'app/api/ProductAccess.js',
+      Summary: 'app/components/Summary.jsx',
+      Item: 'app/components/Item.jsx',
+      templateConfig: 'app/api/templateConfig.js'
     },
     extensions: ['','.js','.jsx']
   },

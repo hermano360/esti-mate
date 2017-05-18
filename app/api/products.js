@@ -5,7 +5,7 @@ module.exports = {
     console.log(modelNo,"products");
     var dbLink = 'mongodb://'+'hermano360'+':'+'f00tball'+'@'+'ds137090.mlab.com:37090/meadowlark';
     var query = {};
-    if(modelNo !== 'A'){
+    if(modelNo !== 'all'){
       query = {
         modelNo:modelNo
       }
