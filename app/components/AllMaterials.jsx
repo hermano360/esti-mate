@@ -9,17 +9,17 @@ var AllMaterials= React.createClass({
     	}
   	},
 	componentDidMount: function(){
-		var that = this;
+		
 		let newCategories = []
-		ProductAccess.allProducts().then(function(data){
+		ProductAccess.allProducts().then((data)=>{
 			data.forEach((product)=>{
-				if(that.state.categories.indexOf(product.category)===-1){
+				if(newCategories.indexOf(product.category)===-1){
 					newCategories.push(product.category)
 				}
 			})
-			that.setState({
+			this.setState({
 				products: [
-				...that.state.products,
+				...this.state.products,
 				...data
 				],
 				categories: newCategories
@@ -31,6 +31,7 @@ var AllMaterials= React.createClass({
 	},
 
 	render: function(){
+		var {categories,products} = this.state;
 		return (
 			<h1>All Materials</h1>
 		)
