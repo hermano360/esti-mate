@@ -18,8 +18,13 @@ app.use(function(req,res,next){
 app.use(express.static('public'));
 
 app.get('/modelNo/:modelNo', function(req,res,next){
-  console.log(req.params.modelNo,"node");
-  products.connectDB(req.params.modelNo,function(docs){
+  products.getModelNo(req.params.modelNo,function(docs){
+    res.json(docs)
+  });
+});
+
+app.get('/allProducts', function(req,res,next){
+  products.allProducts(function(docs){
     res.json(docs)
   });
 });

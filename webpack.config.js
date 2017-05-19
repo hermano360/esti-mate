@@ -32,7 +32,8 @@ module.exports = {
       ProductAccess: 'app/api/ProductAccess.js',
       Summary: 'app/components/Summary.jsx',
       Item: 'app/components/Item.jsx',
-      templateConfig: 'app/api/templateConfig.js'
+      templateConfig: 'app/api/templateConfig.js',
+      AllMaterials: "app/components/AllMaterials.jsx"
     },
     extensions: ['','.js','.jsx']
   },
