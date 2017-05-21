@@ -18,15 +18,17 @@ var Item= React.createClass({
   render: function(){
     var {photo,price,modelNo,refURL,description,category}=this.props;
     return (
-      <div className="container">
-          <a href={refURL}>
-              <img src={photo}></img>
-              <h3>{description}</h3>
-              <p>
-                Model Number: {modelNo}<br/>
-                Price: {price}<br/>
-              </p>
-          </a>
+      <div className="card small-3 float-left" data-equalizer-watch>
+        <a href={refURL}>
+        <img src={photo}/>
+        <div className="card-section">
+          <h4>{description}</h4>
+          <p>
+            Model Number: {modelNo}<br/>
+            Price: {price}<br/>
+          </p>
+        </div>
+        </a>
         Quantity: <input type="text" ref="qty" onChange={this.handleChange} defaultValue="0"/>
       </div>
     )

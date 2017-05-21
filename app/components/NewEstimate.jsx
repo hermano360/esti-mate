@@ -24,6 +24,23 @@ var NewEstimate= React.createClass({
       display:'AllMaterials'
     })
   },
+  handleReturnClick: function(modelNos){
+    modelNos.forEach((modelNo)=>{
+      ProductAccess.getModelNo(modelNo).then((data)=>{
+        this.setState({
+          data:[
+          ...this.state.data,       
+            data[0]
+          ]
+        });
+      }, function(errorMessage){
+        console.log(errorMessage);
+      });
+    });
+    this.setState({
+      display:'cart'
+    })
+  },
   bedroomHandler: function(e){
     var that = this;
     this.setState({
@@ -34,7 +51,6 @@ var NewEstimate= React.createClass({
     e.preventDefault();
     $('#example-dropdown').foundation('toggle');
     var starters = templateConfig.bedroom;
-    console.log(starters);
     starters.forEach((modelNo)=>{
       console.log(that);
       ProductAccess.getModelNo(modelNo).then(function(data){
@@ -47,7 +63,7 @@ var NewEstimate= React.createClass({
       }, function(errorMessage){
         console.log(errorMessage);
       });
-    })
+    });
   },
     bathroomHandler: function(e){
     var that = this;
@@ -106,7 +122,7 @@ var NewEstimate= React.createClass({
   render: function(){
 
     var {runningTotal,display} = this.state;
-    if(display==="cart"){
+
         var renderItems = ()=>{
           var currentItems = this.state.data;
           if(currentItems.length > 0){
@@ -124,11 +140,18 @@ var NewEstimate= React.createClass({
           }
     
         };
+        var renderAdditionalItems = ()=>{
+          if(display==='cart'){
+            return <button className="button" type="button" onClick={this.handleAllMaterials}>Add Other Materials!</button>
+          } else if(display==='AllMaterials'){
+            return <AllMaterials onReturnClick={this.handleReturnClick}/>
+          }
+        }
     
         return (
         <div>
           <div className="row">
-            <div className="small-3 text-align center column">
+            <div className="small-3 text-align center column float-left">
               <button className="button" type="button" data-toggle="example-dropdown">Templates</button>
               <div className="dropdown-pane small-6" id="example-dropdown" data-dropdown data-auto-focus="true">
                 <a className="button small-12" onClick={this.bedroomHandler}>Bedroom</a>
@@ -137,19 +160,16 @@ var NewEstimate= React.createClass({
                 <a className="button small-12">Patio</a>
               </div>
             </div>
-            <div className=" small-9 text-align center column">
+            <div className="small-9 float-left">
+              <div className="row" data-equalizer>
               {renderItems()}
+              </div>
             </div>
           </div>
-          <button className="button" type="button" onClick={this.handleAllMaterials}>Add Other Materials!</button>
+          {renderAdditionalItems()}
           <Summary runningTotal={runningTotal}/>
         </div>
         )
-      }else if(display=="AllMaterials"){
-        return (
-          <AllMaterials />
-          )
-      }
 
   }
 })
