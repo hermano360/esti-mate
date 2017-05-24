@@ -44,7 +44,6 @@ var NewEstimate= React.createClass({
         local = [];
       }
       local.forEach((localItem,index)=>{
-        console.log(this.state.data);
         if(localItem.modelNo===modelNo){
           inLocalStorage = true;
           localStorageIndex = index;
@@ -80,10 +79,9 @@ var NewEstimate= React.createClass({
 
   },
   handleReturnClick: function(modelNos){
-    var that = this;
-    modelNos.forEach((modelNo)=>{
 
-      that.checkLocalStorage(modelNo);
+    modelNos.forEach((modelNo)=>{
+      this.checkLocalStorage(modelNo);
     });
 
     this.setState({
@@ -94,31 +92,33 @@ var NewEstimate= React.createClass({
     this.setState({
       data:[],
       materialTotals: [],
-      runningTotal:0
+      runningTotal:0,
+      room:"bedroom"
     });
-    var that = this;
-    debugger
     e.preventDefault();
     $('#example-dropdown').foundation('toggle');
     var starters = templateConfig.bedroom;
     starters.forEach((modelNo)=>{
-      that.checkLocalStorage(modelNo);
+      this.checkLocalStorage(modelNo);
     });
   },
   bathroomHandler: function(e){
     this.setState({
       data:[],
       materialTotals: [],
-      runningTotal:0
+      runningTotal:0,
+      room: "bathroom"
     });
-    var that = this;
-    debugger
+    console.log("CHECKCHECK",this.state.data)
+
     e.preventDefault();
     $('#example-dropdown').foundation('toggle');
     var starters = templateConfig.bathroom;
     console.log(starters);
     starters.forEach((modelNo)=>{
-      that.checkLocalStorage(modelNo);
+      debugger
+      this.checkLocalStorage(modelNo);
+      debugger
     })
   },
   handleChange: function(qty,price,total,item){
