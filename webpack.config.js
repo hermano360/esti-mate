@@ -33,7 +33,8 @@ module.exports = {
       Summary: 'app/components/Summary.jsx',
       Item: 'app/components/Item.jsx',
       templateConfig: 'app/api/templateConfig.js',
-      AllMaterials: "app/components/AllMaterials.jsx"
+      AllMaterials: "app/components/AllMaterials.jsx",
+      ItemValidation: 'app/api/ItemValidation.js'
     },
     extensions: ['','.js','.jsx']
   },

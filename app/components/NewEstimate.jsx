@@ -4,6 +4,7 @@ var Summary = require('Summary');
 var templateConfig = require('templateConfig');
 var Item = require('Item');
 var AllMaterials = require('AllMaterials');
+var ItemValidation = require('ItemValidation');
 
 
 var NewEstimate= React.createClass({
@@ -25,18 +26,19 @@ var NewEstimate= React.createClass({
     })
   },
   handleReturnClick: function(modelNos){
-    //trying out post api
-    ProductAccess.getModelNoList(modelNos).then((data)=>{
-      console.log(data);
-    }, function(errorMessage){
-        console.log(errorMessage);
-      });
+    var filteredModelNos = ItemValidation.avoidStateDuplicates(modelNos,this.state.data);
+    var localModelNos = ItemValidation.modelNosFromLocalStorage(filteredModelNos);
+    var dbModelNos = ItemValidation.getFromDatabase(localModelNos,filteredModelNos);
+    console.log(dbModelNos.length);
+    var localItems = ProductAccess.getProductsFromLocalStorage(localModelNos);
 
-    ProductAccess.getModelNoList(modelNos).then((data)=>{
+    ProductAccess.getModelNoList(dbModelNos).then((data)=>{
+      ItemValidation.addToLocalStorage(data);
       this.setState({
         data:[
         ...this.state.data,
-        ...data
+        ...data,
+        ...localItems
         ]
       })
     });
@@ -53,17 +55,26 @@ var NewEstimate= React.createClass({
     e.preventDefault();
     $('#example-dropdown').foundation('toggle');
     var starters = templateConfig.bedroom;
-    ProductAccess.getModelNoList(starters).then((data)=>{
+    var filteredModelNos = ItemValidation.avoidStateDuplicates(starters,this.state.data);
+    var localModelNos = ItemValidation.modelNosFromLocalStorage(filteredModelNos);
+    var dbModelNos = ItemValidation.getFromDatabase(localModelNos,filteredModelNos);
+    console.log(dbModelNos.length);
+    var localItems = ProductAccess.getProductsFromLocalStorage(localModelNos);
+    
+    ProductAccess.getModelNoList(dbModelNos).then((data)=>{
+      ItemValidation.addToLocalStorage(data);
       this.setState({
         data:[
         ...this.state.data,
-        ...data
+        ...data,
+        ...localItems
         ]
       })
     });
     this.setState({
       display:'cart'
     })
+  
   },
     bathroomHandler: function(e){
     this.setState({
@@ -74,11 +85,19 @@ var NewEstimate= React.createClass({
     e.preventDefault();
     $('#example-dropdown').foundation('toggle');
     var starters = templateConfig.bathroom;
-    ProductAccess.getModelNoList(starters).then((data)=>{
+    var filteredModelNos = ItemValidation.avoidStateDuplicates(starters,this.state.data);
+    var localModelNos = ItemValidation.modelNosFromLocalStorage(filteredModelNos);
+    var dbModelNos = ItemValidation.getFromDatabase(localModelNos,filteredModelNos);
+    console.log(dbModelNos.length);
+    var localItems = ProductAccess.getProductsFromLocalStorage(localModelNos);
+    
+    ProductAccess.getModelNoList(dbModelNos).then((data)=>{
+      ItemValidation.addToLocalStorage(data);
       this.setState({
         data:[
         ...this.state.data,
-        ...data
+        ...data,
+        ...localItems
         ]
       })
     });

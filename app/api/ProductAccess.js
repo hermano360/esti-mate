@@ -25,18 +25,32 @@ module.exports = {
     });
   },
   getModelNoList: function (modelNos){
-    var requestUrl = `/modelNos`;
 
-    return axios({
-  method: 'post',
-  url: requestUrl,
-  data: {
-    modelNos:modelNos
-  }
-}).then(function(res){
-      return res.data
-    }, function(err){
-      throw new Error('Product Data not Available');
-    })
-  }
+        var requestUrl = `/modelNos`;
+        return axios({
+      method: 'post',
+      url: requestUrl,
+      data: {
+        modelNos:modelNos
+      }
+    }).then(function(res){
+          return res.data
+        }).catch(function (error) {
+          return []
+    console.log(error);
+  })
+      }
+  ,
+    getProductsFromLocalStorage: function (modelNos){
+      let local = JSON.parse(localStorage.getItem('Items'));
+      return modelNos.map((modelNo)=>{
+        var returnedItem;
+        local.forEach((localItem)=>{
+          if(localItem.modelNo === modelNo){
+            returnedItem = localItem;
+          }
+        });
+        return returnedItem;
+      })
+}
 }

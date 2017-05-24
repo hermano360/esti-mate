@@ -1,6 +1,8 @@
 var React = require('react');
 var ProductAccess = require('ProductAccess');
+var ItemValidation = require('ItemValidation');
 const uuidV1 = require('uuid/v1');
+var templateConfig = require('templateConfig');
 
 var AllMaterials= React.createClass({
 	getInitialState: function(){
@@ -12,7 +14,13 @@ var AllMaterials= React.createClass({
 	componentDidMount: function(){
 		
 		let newCategories = []
-		ProductAccess.allProducts().then((data)=>{
+    var localModelNos = ItemValidation.modelNosFromLocalStorage(templateConfig.all);
+    var dbModelNos = ItemValidation.getFromDatabase(localModelNos,templateConfig.all);
+    console.log(dbModelNos.length);
+    var localItems = ProductAccess.getProductsFromLocalStorage(localModelNos);
+		ProductAccess.getModelNoList(dbModelNos).then((data)=>{
+			data = [...data,...localItems];
+			ItemValidation.addToLocalStorage(data);
 			data.forEach((product)=>{
 				if(newCategories.indexOf(product.category)===-1){
 					newCategories.push(product.category)
