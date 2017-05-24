@@ -23,5 +23,20 @@ module.exports = {
     }, function(err){
       throw new Error('Product Data not Available');
     });
+  },
+  getModelNoList: function (modelNos){
+    var requestUrl = `/modelNos`;
+
+    return axios({
+  method: 'post',
+  url: requestUrl,
+  data: {
+    modelNos:modelNos
+  }
+}).then(function(res){
+      return res.data
+    }, function(err){
+      throw new Error('Product Data not Available');
+    })
   }
 }

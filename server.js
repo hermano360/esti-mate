@@ -1,5 +1,6 @@
 var express = require('express');
 var products = require('./app/api/products.js');
+var bodyParser = require('body-parser');
 
 //Create out app
 
@@ -17,6 +18,9 @@ app.use(function(req,res,next){
 })
 app.use(express.static('public'));
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended:true}));
+
 app.get('/modelNo/:modelNo', function(req,res,next){
   products.getModelNo(req.params.modelNo,function(docs){
     res.json(docs)
@@ -28,6 +32,12 @@ app.get('/allProducts', function(req,res,next){
     res.json(docs)
   });
 });
+
+app.post('/modelNos', function(req,res,next){
+  products.getModelNos(req.body.modelNos,function(docs){
+    res.json(docs);
+  })
+})
 
 app.listen(PORT,function(){
   console.log('Express server is up on port ' + PORT);

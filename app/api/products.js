@@ -21,12 +21,24 @@ module.exports = {
       });
     });
   },
-    allProducts : function(callback){
+  allProducts : function(callback){
     console.log("products");
     var dbLink = 'mongodb://'+'hermano360'+':'+'f00tball'+'@'+'ds137090.mlab.com:37090/meadowlark';
     MongoClient.connect(dbLink, function(err, db) {
       console.log("Successfully connected to database");
       db.collection('products').find({}).toArray(function(err, docs) {
+        console.log(docs);
+        callback(docs);
+        db.close();
+      });
+    });
+  },
+  getModelNos: function(modelNos,callback){
+    console.log(modelNos, "post modelNos");
+    var dbLink = 'mongodb://'+'hermano360'+':'+'f00tball'+'@'+'ds137090.mlab.com:37090/meadowlark';
+    MongoClient.connect(dbLink, function(err, db) {
+      console.log("Successfully connected to database");
+      db.collection('products').find({modelNo: {$in:modelNos}}).toArray(function(err, docs) {
         console.log(docs);
         callback(docs);
         db.close();

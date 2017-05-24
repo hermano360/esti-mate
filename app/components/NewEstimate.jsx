@@ -25,24 +25,26 @@ var NewEstimate= React.createClass({
     })
   },
   handleReturnClick: function(modelNos){
-    modelNos.forEach((modelNo)=>{
-      ProductAccess.getModelNo(modelNo).then((data)=>{
-        this.setState({
-          data:[
-          ...this.state.data,       
-            data[0]
-          ]
-        });
-      }, function(errorMessage){
+    //trying out post api
+    ProductAccess.getModelNoList(modelNos).then((data)=>{
+      console.log(data);
+    }, function(errorMessage){
         console.log(errorMessage);
       });
+
+    ProductAccess.getModelNoList(modelNos).then((data)=>{
+      this.setState({
+        data:[
+        ...this.state.data,
+        ...data
+        ]
+      })
     });
     this.setState({
       display:'cart'
     })
   },
   bedroomHandler: function(e){
-    var that = this;
     this.setState({
       data:[],
       materialTotals: [],
@@ -51,22 +53,19 @@ var NewEstimate= React.createClass({
     e.preventDefault();
     $('#example-dropdown').foundation('toggle');
     var starters = templateConfig.bedroom;
-    starters.forEach((modelNo)=>{
-      console.log(that);
-      ProductAccess.getModelNo(modelNo).then(function(data){
-        that.setState({
-          data:[
-            ...that.state.data,
-            data[0]
-          ]
-        });
-      }, function(errorMessage){
-        console.log(errorMessage);
-      });
+    ProductAccess.getModelNoList(starters).then((data)=>{
+      this.setState({
+        data:[
+        ...this.state.data,
+        ...data
+        ]
+      })
     });
+    this.setState({
+      display:'cart'
+    })
   },
     bathroomHandler: function(e){
-    var that = this;
     this.setState({
       data:[],
       materialTotals: [],
@@ -75,19 +74,16 @@ var NewEstimate= React.createClass({
     e.preventDefault();
     $('#example-dropdown').foundation('toggle');
     var starters = templateConfig.bathroom;
-    console.log(starters);
-    starters.forEach((modelNo)=>{
-      console.log(that);
-      ProductAccess.getModelNo(modelNo).then(function(data){
-        that.setState({
-          data:[
-            ...that.state.data,
-            data[0]
-          ]
-        });
-      }, function(errorMessage){
-        console.log(errorMessage);
-      });
+    ProductAccess.getModelNoList(starters).then((data)=>{
+      this.setState({
+        data:[
+        ...this.state.data,
+        ...data
+        ]
+      })
+    });
+    this.setState({
+      display:'cart'
     })
   },
   handleChange: function(qty,price,total,item){
@@ -99,7 +95,6 @@ var NewEstimate= React.createClass({
         identifiedMaterial = i;
       }
     })
-
     materialTotals[identifiedMaterial]={
       item,
       qty,
