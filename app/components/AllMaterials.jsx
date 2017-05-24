@@ -11,7 +11,7 @@ var AllMaterials= React.createClass({
   	},
 	componentDidMount: function(){
 		
-		let newCategories = []
+		let newCategories = [];
 		ProductAccess.allProducts().then((data)=>{
 			data.forEach((product)=>{
 				if(newCategories.indexOf(product.category)===-1){
@@ -37,7 +37,19 @@ var AllMaterials= React.createClass({
 				collectedModelNos.push(item)
 			}
 		}
-		this.props.onReturnClick(collectedModelNos);
+		var uniqueModelNos = collectedModelNos.filter((modelNo)=>{
+			var keep = true;
+			this.props.currentItems.forEach((cartItem)=>{
+				console.log(cartItem.modelNo,modelNo)
+				if(modelNo === cartItem.modelNo){
+					console.log(modelNo);
+					keep = false;
+				}
+			})
+			return keep
+		});
+
+		this.props.onReturnClick(uniqueModelNos);
 	},
 
 	render: function(){
@@ -87,12 +99,6 @@ var AllMaterials= React.createClass({
         		}
         	})
         }
-        var renderNumbers = [
-
-        	[<h1 key={"kitchenSink"}>Kitchen Sinks</h1>,<h2 key={1}>1</h2>,<h2 key={2}>2</h2>,<h2 key={3}>3</h2>],
-        	[<h1 key={"kitchenSink"}>Kitchen Sinks</h1>,<h2 key={1}>1</h2>,<h2 key={2}>2</h2>,<h2 key={3}>3</h2>],
-        	[<h1 key={"kitchenSink"}>Kitchen Sinks</h1>,<h2 key={1}>1</h2>,<h2 key={2}>2</h2>,<h2 key={3}>3</h2>]
-        ];
 
 
 		return (
@@ -104,7 +110,7 @@ var AllMaterials= React.createClass({
 						</div>
 					</div>
 				</form>
-				<button className="button" onClick={this.onReturnClick}>Return</button>
+				<button className="button" onClick={this.onReturnClick}>Add to Cart and Return</button>
 			</div>
 		)
 	}

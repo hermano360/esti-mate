@@ -24,70 +24,101 @@ var NewEstimate= React.createClass({
       display:'AllMaterials'
     })
   },
-  handleReturnClick: function(modelNos){
-    modelNos.forEach((modelNo)=>{
-      ProductAccess.getModelNo(modelNo).then((data)=>{
+  checkLocalStorage(modelNo){
+    var currentState = this.state.data;
+    console.log(this.state.data);
+    var inCurrentState = false
+    currentState.forEach((currentItem)=>{
+      console.log(this.state.data);
+      if(currentItem.modelNo === modelNo){
+        inCurrentState = true;
+      }
+    });
+
+    if(!inCurrentState){
+      var local = JSON.parse(localStorage.getItem('Items'));
+      console.log(this.state.data);
+      var inLocalStorage = false;
+      var localStorageIndex;
+      if(local=== null){
+        local = [];
+      }
+      local.forEach((localItem,index)=>{
+        console.log(this.state.data);
+        if(localItem.modelNo===modelNo){
+          inLocalStorage = true;
+          localStorageIndex = index;
+        }
+      });
+      if(inLocalStorage){
+        console.log(this.state.data);
+        currentState.push(local[localStorageIndex]);
         this.setState({
-          data:[
-          ...this.state.data,       
-            data[0]
-          ]
+          data: currentState
+        });
+      } else {
+      ProductAccess.getModelNo(modelNo).then((data)=>{
+        console.log(this.state.data);
+        // adding next line because of asyncronosity
+        local = JSON.parse(localStorage.getItem('Items'));
+        if(local === null){
+          local=[];
+        }
+        local.push(data[0]);
+        localStorage.setItem('Items',JSON.stringify(local));
+        currentState.push(data[0])
+        this.setState({
+          data:currentState
         });
       }, function(errorMessage){
         console.log(errorMessage);
-      });
+      }); 
+
+      }
+
+    }
+
+  },
+  handleReturnClick: function(modelNos){
+    var that = this;
+    modelNos.forEach((modelNo)=>{
+
+      that.checkLocalStorage(modelNo);
     });
+
     this.setState({
       display:'cart'
     })
   },
   bedroomHandler: function(e){
-    var that = this;
     this.setState({
       data:[],
       materialTotals: [],
       runningTotal:0
     });
+    var that = this;
+    debugger
     e.preventDefault();
     $('#example-dropdown').foundation('toggle');
     var starters = templateConfig.bedroom;
     starters.forEach((modelNo)=>{
-      console.log(that);
-      ProductAccess.getModelNo(modelNo).then(function(data){
-        that.setState({
-          data:[
-            ...that.state.data,
-            data[0]
-          ]
-        });
-      }, function(errorMessage){
-        console.log(errorMessage);
-      });
+      that.checkLocalStorage(modelNo);
     });
   },
-    bathroomHandler: function(e){
-    var that = this;
+  bathroomHandler: function(e){
     this.setState({
       data:[],
       materialTotals: [],
       runningTotal:0
     });
+    var that = this;
+    debugger
     e.preventDefault();
     $('#example-dropdown').foundation('toggle');
     var starters = templateConfig.bathroom;
     console.log(starters);
     starters.forEach((modelNo)=>{
-      console.log(that);
-      ProductAccess.getModelNo(modelNo).then(function(data){
-        that.setState({
-          data:[
-            ...that.state.data,
-            data[0]
-          ]
-        });
-      }, function(errorMessage){
-        console.log(errorMessage);
-      });
+      that.checkLocalStorage(modelNo);
     })
   },
   handleChange: function(qty,price,total,item){
@@ -112,7 +143,6 @@ var NewEstimate= React.createClass({
       runningTotal += material.total;
     })
 
-    console.log("uh",runningTotal);
     this.setState({
       materialTotals,
       runningTotal
@@ -123,53 +153,54 @@ var NewEstimate= React.createClass({
 
     var {runningTotal,display} = this.state;
 
-        var renderItems = ()=>{
-          var currentItems = this.state.data;
-          if(currentItems.length > 0){
-            return currentItems.map((item) => {
-              if(item){
-                return (
-                  <Item key={item._id} {...item} onChange={this.handleChange}/>
-                )
-              }
-            });
-          } else {
+    var renderItems = ()=>{
+      var currentItems = this.state.data;
+      console.log(this.state.data);
+      if(currentItems.length > 0){
+        return currentItems.map((item) => {
+          if(item){
             return (
-              <div className="container center-align">Cart Empty!</div>
-            )
+              <Item key={item._id} {...item} onChange={this.handleChange}/>
+              )
           }
-    
-        };
-        var renderAdditionalItems = ()=>{
-          if(display==='cart'){
-            return <button className="button" type="button" onClick={this.handleAllMaterials}>Add Other Materials!</button>
-          } else if(display==='AllMaterials'){
-            return <AllMaterials onReturnClick={this.handleReturnClick}/>
-          }
-        }
-    
+        });
+      } else {
         return (
-        <div>
-          <div className="row">
-            <div className="small-3 text-align center column float-left">
-              <button className="button" type="button" data-toggle="example-dropdown">Templates</button>
-              <div className="dropdown-pane small-6" id="example-dropdown" data-dropdown data-auto-focus="true">
-                <a className="button small-12" onClick={this.bedroomHandler}>Bedroom</a>
-                <a className="button small-12" onClick={this.bathroomHandler} >Bathroom</a>
-                <a className="button small-12">Livingroom</a>
-                <a className="button small-12">Patio</a>
-              </div>
-            </div>
-            <div className="small-9 float-left">
-              <div className="row" data-equalizer>
-              {renderItems()}
-              </div>
-            </div>
-          </div>
-          {renderAdditionalItems()}
-          <Summary runningTotal={runningTotal}/>
-        </div>
-        )
+          <div className="container center-align">Cart Empty!</div>
+          )
+      }
+
+    };
+    var renderAdditionalItems = ()=>{
+      if(display==='cart'){
+        return <button className="button" type="button" onClick={this.handleAllMaterials}>Add Other Materials!</button>
+      } else if(display==='AllMaterials'){
+        return <AllMaterials onReturnClick={this.handleReturnClick} currentItems={this.state.data}/>
+      }
+    }
+    
+    return (
+      <div>
+      <div className="row">
+      <div className="small-3 text-align center column float-left">
+      <button className="button" type="button" data-toggle="example-dropdown">Templates</button>
+      <div className="dropdown-pane small-6" id="example-dropdown" data-dropdown data-auto-focus="true">
+      <a className="button small-12" onClick={this.bedroomHandler}>Bedroom</a>
+      <a className="button small-12" onClick={this.bathroomHandler} >Bathroom</a>
+      <a className="button small-12">Livingroom</a>
+      <a className="button small-12">Patio</a>
+      </div>
+      </div>
+      <div className="small-9 float-left column">
+      <div className="row" data-equalizer>
+      {renderItems()}
+      </div>
+      </div>
+      </div>
+      {renderAdditionalItems()}
+      <Summary runningTotal={runningTotal}/>
+      </div>
+      )
 
   }
 })

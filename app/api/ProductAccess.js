@@ -6,7 +6,7 @@ module.exports = {
   getModelNo: function(modelNo){
     var requestUrl = `/modelNo/${modelNo}`;
     console.log(requestUrl);
-
+    
     return axios.get(requestUrl).then(function(res){
       return res.data;
     }, function(err){
